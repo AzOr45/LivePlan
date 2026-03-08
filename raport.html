@@ -47,12 +47,18 @@ ${description}
                 });
 
                 const data = await res.json();
-                alert("Raport wysłany! Link do issue: " + data.html_url);
+                
+                if (res.ok && data.success) {
+                    alert("Raport wysłany! Link do issue: " + data.html_url);
+                    
+                    // Opcjonalnie wyczyść formularz
+                    document.getElementById("title").value = "";
+                    document.getElementById("description").value = "";
+                } else {
+                    alert("Nie udało się wysłać raportu. Błąd: " + (data.error || "Nieznany błąd"));
+                }
+                
                 console.log(data);
-
-                // Opcjonalnie wyczyść formularz
-                document.getElementById("title").value = "";
-                document.getElementById("description").value = "";
             } catch (err) {
                 console.error(err);
                 alert("Coś poszło nie tak, sprawdź konsolę.");
