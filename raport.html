@@ -197,33 +197,50 @@
             const usernameInput = document.getElementById("username").value.trim();
 
             const username = usernameInput ? usernameInput : "Wysłano anonimowo";
-            const userString = usernameInput ? `Od: @${usernameInput}` : `Od: Wysłano anonimowo`;
+            const userString = usernameInput ? `Od: ${usernameInput}` : `Od: Wysłano anonimowo`;
 
             let diagnosticsMarkdown = "";
             if (shareDiagnostics) {
                 const browser = getBrowser() || "Nieznana";
                 const os = getOS() || "Nieznany";
                 const userAgentDisplay = navigator.userAgent;
+                
+                // Nowe parametry
+                const language = navigator.language || "Nieznany";
+                const screenRes = `${window.screen.width}x${window.screen.height}`;
+                const windowSize = `${window.innerWidth}x${window.innerHeight}`;
+                const theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "Ciemny" : "Jasny";
+                const localTime = new Date().toLocaleString('pl-PL');
+                const isOnline = navigator.onLine ? "Tak" : "Nie";
+                const cookiesEnabled = navigator.cookieEnabled ? "Tak" : "Nie";
 
                 diagnosticsMarkdown = `
 
 Informacje diagnostyczne
 ---
 <details>
-<summary>Kliknij, żeby zobaczyć tabelę</summary>
+<summary>Kliknij żeby wyświetlić informacje diagnostyczne</summary>
 
-| Parametr       | Wartość|
-|----------------|----------------|
-| Przeglądarka   | ${browser}     |
-| User agent     | ${userAgentDisplay} |
-| Wersja OS      | ${os}          |
+| Parametr            | Wartość|
+|---------------------|----------------|
+| Przeglądarka        | ${browser}     |
+| User agent          | ${userAgentDisplay} |
+| Wersja OS           | ${os}          |
+| Język               | ${language}    |
+| Rozdzielczość ekranu| ${screenRes}   |
+| Rozmiar okna        | ${windowSize}  |
+| Motyw systemowy     | ${theme}       |
+| Czas lokalny        | ${localTime}   |
+| Online              | ${isOnline}    |
+| Cookies włączone    | ${cookiesEnabled} |
   
 </details>`;
             }
 
             const body = `# Zgłoszenie od użytkownika
 > [!${type}]
-> ${description}
+> **${title}**
+> ${description.replace(/\n/g, '\n> ')}
 
 > ${userString}
     ![Version](https://img.shields.io/badge/Wersja_aplikacji-1.0-blue)
